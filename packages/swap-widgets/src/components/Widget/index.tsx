@@ -353,6 +353,7 @@ const Widget = ({
         return (
           <SelectCurrency
             selectedToken={tokenIn}
+            filterTokens={tokenOut}
             onChange={token => {
               if (token.address === tokenOut) setTokenOut(tokenIn)
               setTokenIn(token.address)
@@ -614,7 +615,7 @@ const Widget = ({
               })}
             </span>
           )}
-          <SelectTokenBtn onClick={() => !isUnsupported && setShowModal(ModalType.CURRENCY_OUT)}>
+          <SelectTokenBtn>
             {tokenOutInfo ? (
               <>
                 <img
