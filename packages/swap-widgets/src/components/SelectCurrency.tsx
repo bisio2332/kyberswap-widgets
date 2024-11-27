@@ -165,7 +165,7 @@ function SelectCurrency({
   onImport,
 }: {
   selectedToken: string
-  filterTokens: string[]
+  filterTokens?: string[]
   onChange: (token: TokenDetail) => void
   onImport: (token: TokenDetail) => void
 }) {
@@ -185,7 +185,7 @@ function SelectCurrency({
     },
 
     ...tokens
-      .filter(item => !filterTokens.some(token => item.address !== token))
+      .filter(item => !(filterTokens || []).some(token => token === item.address))
       .map(item => {
         const balance = balances[item.address]
         const formattedBalance = formatUnits(balance || BigNumber.from(0), item.decimals)

@@ -353,7 +353,7 @@ const Widget = ({
         return (
           <SelectCurrency
             selectedToken={tokenIn}
-            filterTokens={tokenOut}
+            filterTokens={[tokenOut]}
             onChange={token => {
               if (token.address === tokenOut) setTokenOut(tokenIn)
               setTokenIn(token.address)
