@@ -6,7 +6,7 @@ import AlertIcon from '../assets/alert.svg'
 import InfoHelper from './InfoHelper'
 
 const Label = styled.div`
-  font-size: 0.75rem;
+  font-size: 1.4rem;
   text-align: left;
   color: rgba(192, 192, 192, 1);
   font-weight: 400;
@@ -19,7 +19,7 @@ const Input = styled.input<{ isActive: boolean }>`
   color: ${({ theme }) => theme.text};
   text-align: right;
   width: 100%;
-  font-size: 12px;
+  font-size: 0.8rem;
   padding: 0;
 
   :focus {
@@ -33,15 +33,15 @@ const SlippageWrapper = styled.div`
   background-color: rgb(17, 16, 21);
   display: flex;
   border: 1px solid rgba(118, 118, 118, 1);
-  max-width: 115px;
+  max-width: 10rem;
 `
 
 const SlippageItem = styled.div<{ isActive: boolean }>`
   position: relative;
   border-radius: 999px;
   color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
-  font-size: 12px;
-  padding: 4px;
+  font-size: 1.2rem;
+  padding: 0.4rem 0.8rem;
   font-weight: 500;
   flex: 2;
   display: flex;
@@ -70,16 +70,16 @@ const Row = styled.div`
 
 const TTLInput = styled.div`
   display: flex;
-  padding: 6px 8px;
+  padding: 0.5rem 0.8rem;
   gap: 4px;
   border-radius: 999px;
   background-color: rgb(17, 16, 21);
   border: 1px solid rgba(118, 118, 118, 1);
   color: ${({ theme }) => theme.text};
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 500;
   text-align: right;
-  max-width: 103px;
+  max-width: 8.6rem;
 
   input {
     border: none;
@@ -88,6 +88,7 @@ const TTLInput = styled.div`
     background: transparent;
     text-align: right;
     width: 80%;
+    font-size: 1.2rem;
     color: ${({ theme }) => theme.text};
   }
 `
@@ -215,10 +216,13 @@ export const SlippageInput = ({
       {message && (
         <div
           style={{
-            fontSize: '12px',
+            fontSize: '9px',
             color: isValid ? theme.warning : theme.error,
             textAlign: 'left',
             marginTop: '4px',
+            position: 'absolute',
+            right: '3px',
+            bottom: '-9px',
           }}
         >
           {message}
@@ -249,7 +253,15 @@ function Settings({
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          position: 'relative',
+        }}
+      >
         <Label>
           Max Slippage
           <InfoHelper
@@ -260,7 +272,7 @@ function Settings({
         <SlippageInput slippage={slippage} setSlippage={setSlippage} />
       </div>
 
-      <Row>
+      <Row style={{ marginBottom: '2rem' }}>
         <Label>
           Transaction Time Limit
           <InfoHelper
@@ -273,7 +285,6 @@ function Settings({
             maxLength={5}
             placeholder="20"
             value={deadline ? deadline.toString() : ''}
-            style={{ fontSize: '12px' }}
             onChange={e => {
               const v = +e.target.value
                 .trim()

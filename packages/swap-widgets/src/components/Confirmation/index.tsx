@@ -44,8 +44,9 @@ const ArrowDown = styled(BackIcon)`
 `
 
 const Arrow = styled(ArrowIcon)`
-  color: ${({ theme }) => theme.subText};
+  color: rgba(239, 239, 239, 1);
   transform: rotate(-90deg);
+  overflow: visible;
 `
 
 const Flex = styled.div`
@@ -71,7 +72,7 @@ const Count = styled.div`
   align-items: center;
   position: relative;
   margin-bottom: 0.4rem;
-  font-size: 1.25rem;
+  font-size: 1.8rem;
   padding: 0.25rem;
   &:before {
     content: '';
@@ -147,7 +148,7 @@ const Divider = styled.div`
 `
 
 const WaitingText = styled.div`
-  font-size: 1rem;
+  font-size: 1.6rem;
   font-weight: 500;
 `
 
@@ -561,7 +562,7 @@ function Confirmation({
           {!!trade?.routeSummary?.amountInUsd && (
             <span
               style={{
-                fontSize: '12px',
+                fontSize: '1.2rem',
                 marginRight: '4px',
                 color: theme.subText,
               }}
@@ -597,7 +598,7 @@ function Confirmation({
           {!!trade?.routeSummary?.amountOutUsd && (
             <span
               style={{
-                fontSize: '12px',
+                fontSize: '1.2rem',
                 marginRight: '4px',
                 color: theme.subText,
               }}

@@ -7,7 +7,7 @@ interface WrapperProps {
 export const Wrapper = styled.div<WrapperProps>`
   border-radius: ${({ theme }) => theme.borderRadius};
   padding: 1rem;
-  width: ${({ width }) => `${width || 375}px`};
+  width: 37.5rem;
   background: transparent;
   color: ${({ theme }) => theme.text};
   position: relative;
@@ -24,24 +24,21 @@ export const Title = styled.div`
 
 export const InputWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
-  padding: 1.125rem 1rem 1.125rem 1.6rem;
+  padding: 1.8rem 2.4rem;
   background: rgba(39, 38, 44, 1);
-  margin-top: 1rem;
-  box-shadow: ${({ theme }) => theme.boxShadow};
 `
 
 export const GetInputWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
-  padding: 1.125rem 1.6rem;
+  padding: 1.8rem 2.4rem;
   background: rgba(22, 21, 27, 1);
-  margin-top: 0.25rem;
-  box-shadow: ${({ theme }) => theme.boxShadow};
+  margin-top: 0.4rem;
   p {
     color: rgba(118, 118, 118, 1);
     text-align: left;
     text-transform: uppercase;
-    font-size: 0.75rem;
-    margin: 0 0 2rem 0;
+    font-size: 1.2rem;
+    margin: 0 0 3.2rem 0;
   }
 `
 
@@ -51,8 +48,9 @@ export const MaxHalfBtn = styled.button`
   background: linear-gradient(103.19deg, rgba(179, 126, 77, 0.4) 0%, rgba(87, 87, 87, 0.1) 100%, #575757 100%);
   border-radius: ${({ theme }) => theme.buttonRadius};
   color: ${({ theme }) => theme.subText};
-  font-size: 0.6rem;
-  padding: 0.25rem;
+  font-size: 0.8rem;
+  padding: 0.4rem;
+  line-height: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   margin: 0 0.5rem;
@@ -76,6 +74,7 @@ export const BalanceContent = styled.div`
 `
 
 export const SettingBtn = styled.button`
+  font-size: 1.1rem;
   outline: none;
   border: none;
   border-radius: ${({ theme }) => theme.buttonRadius};
@@ -111,11 +110,11 @@ export const AccountBalance = styled.div`
   gap: 4px;
   display: flex;
   align-items: center;
-  font-size: 0.75rem;
+  font-size: 1.2rem;
   line-height: 0.8rem;
   color: ${({ theme }) => theme.subText};
   span {
-    color: rgba(192, 192, 192, 0.2);
+    color: rgba(118, 118, 118, 1);
   }
   p {
     margin: 0;
@@ -127,11 +126,12 @@ export const InputRow = styled.div`
   display: flex;
   align-items: center;
   margin-top: 0.75rem;
+  gap: 1rem;
 `
 
 export const Input = styled.input`
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 2.8rem;
   background: transparent;
   outline: none;
   border: none;
@@ -146,15 +146,15 @@ export const SelectTokenBtn = styled.button`
   outline: none;
   border: none;
   background: rgba(17, 16, 21, 1);
-  border-radius: ${({ theme }) => theme.buttonRadius};
-  padding: 0.375rem 0 0.375rem 0.5rem;
-  font-size: 1.125rem;
-  color: ${({ theme }) => theme.subText};
+  border-radius: 30px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.2rem;
+  color: rgba(192, 192, 192, 1);
   display: flex;
   align-items: center;
   font-weight: 500;
   cursor: pointer;
-
+  width: 10rem;
   :hover {
     opacity: 0.8;
   }
@@ -166,11 +166,12 @@ export const TokenBtn = styled.button`
   background: transparent;
   border-radius: ${({ theme }) => theme.buttonRadius};
   padding: 0.375rem 0 0.375rem 0.5rem;
-  font-size: 1.125rem;
+  font-size: 1.9rem;
   color: rgba(192, 192, 192, 1);
   display: flex;
   align-items: center;
   font-weight: 500;
+  width: 6rem;
 `
 
 export const MiddleRow = styled.div`
@@ -191,9 +192,9 @@ export const CloseButton = styled.button`
   border-radius: ${({ theme }) => theme.buttonRadius};
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 0.75rem;
+  font-size: 1.4rem;
   font-weight: 400;
-  padding: 0.75rem;
+  padding: 1.1rem;
   background: linear-gradient(103.19deg, rgba(124, 124, 124, 0.57) 0%, rgba(91, 91, 91, 0.1) 100%);
   color: #fff;
   cursor: pointer;
@@ -219,11 +220,10 @@ export const Button = styled.button`
   border: none;
   border-radius: ${({ theme }) => theme.buttonRadius};
   width: 100%;
-  margin-top: 0.25rem;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
+  margin-top: 0.4rem;
+  font-size: 1.4rem;
   font-weight: 400;
-  padding: 0.75rem;
+  padding: 1.1rem;
   background: linear-gradient(103.19deg, rgba(179, 126, 77, 0.4) 0%, rgba(87, 87, 87, 0.1) 100%, #575757 100%);
   color: #fff;
   cursor: pointer;
@@ -249,14 +249,19 @@ export const BorderButton = styled.a`
   border: 1px solid rgba(192, 192, 192, 1);
   border-radius: ${({ theme }) => theme.buttonRadius};
   width: 100%;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
+  font-size: 1.4rem;
   font-weight: 400;
-  padding: 0.75rem;
+  padding: 1.1rem;
   background: transparent;
   color: #fff;
   cursor: pointer;
-  max-width: 115px;
+  max-width: 11rem;
+  text-decoration: none;
+  display: flex;
+  line-height: 1.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   :disabled {
     color: ${({ theme }) => theme.subText};
     background: ${({ theme }) => theme.interactive};
@@ -294,8 +299,9 @@ export const Dots = styled.span`
 `
 
 export const Rate = styled.div`
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 500;
+  margin-bottom: 1.5rem;
   color: rgba(192, 192, 192, 1);
 `
 
@@ -313,10 +319,12 @@ export const DetailRow = styled.div`
 export const DetailLabel = styled.div`
   display: flex;
   align-items: center;
+  font-size: 1.4rem;
   color: rgba(192, 192, 192, 1);
 `
 export const DetailRight = styled.div`
-  font-weight: 500;
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 1);
 `
 
 export const DetailTitle = styled.div`
@@ -353,9 +361,9 @@ export const ModalTitle = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  font-size: 0.75rem;
+  font-size: 1.4rem;
   font-weight: 500;
-  color: rgba(118, 118, 118, 1);
+  color: rgba(239, 239, 239, 1);
 `
 export const BackIconWrapper = styled.div`
   background: rgba(39, 38, 44, 1);

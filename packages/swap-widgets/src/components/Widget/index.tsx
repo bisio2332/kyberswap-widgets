@@ -58,7 +58,16 @@ export const DialogWrapper = styled.div`
     overflow: clip;
   }
 
-  &.open {
+  &.open:has(.fixed) {
+    &:before {
+      content: '';
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(22, 21, 27, 0.7);
+    }
     .absolute {
       opacity: 1;
     }
@@ -81,7 +90,7 @@ export const DialogContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-height: 440px;
+  max-height: 44rem;
 
   @supports (overflow: clip) {
     overflow: clip;
@@ -91,8 +100,7 @@ export const DialogContainer = styled.div`
     position: absolute;
     left: 3rem;
     right: 3rem;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 12%;
   }
 
   &.fixed {
@@ -529,12 +537,14 @@ const Widget = ({
                     currentTarget.src = questionImg
                   }}
                 />
-                <div style={{ marginLeft: '0.375rem' }}>{tokenInInfo?.symbol}</div>
+                <div style={{ marginLeft: '0.8rem', fontSize: '1.2rem', color: 'rgba(192, 192, 192, 1)' }}>
+                  {tokenInInfo?.symbol}
+                </div>
               </>
             ) : (
               <SelectTokenText>Select a token</SelectTokenText>
             )}
-            <DropdownIcon />
+            <DropdownIcon style={{ marginLeft: '0.8rem', width: '0.4rem', height: '0.8rem' }} />
           </SelectTokenBtn>
         </InputRow>
       </InputWrapper>
@@ -573,7 +583,9 @@ const Widget = ({
                     currentTarget.src = questionImg
                   }}
                 />
-                <div style={{ marginLeft: '0.375rem' }}>{tokenOutInfo?.symbol}</div>
+                <div style={{ marginLeft: '0.8rem', fontSize: '1.8rem', color: 'rgba(192, 192, 192, 1)' }}>
+                  {tokenOutInfo?.symbol}
+                </div>
               </>
             ) : (
               <SelectTokenText>Select a token</SelectTokenText>
@@ -582,6 +594,7 @@ const Widget = ({
         </InputRow>
       </GetInputWrapper>
       <Button
+        style={{ marginBottom: '1.6rem' }}
         disabled={!!error || loading || checkingAllowance || approvalState === APPROVAL_STATE.PENDING || isUnsupported}
         onClick={async () => {
           if (approvalState === APPROVAL_STATE.NOT_APPROVED && !isWrap && !isUnwrap) {
@@ -641,7 +654,7 @@ const Widget = ({
         </MiddleLeft>
       }
       {showDetail && (
-        <Detail style={{ marginTop: '1rem' }}>
+        <Detail>
           {/*<Row>
             <DetailTitle>More information</DetailTitle>
             {enableRoute && !(isWrap || isUnwrap) && (

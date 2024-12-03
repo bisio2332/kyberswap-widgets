@@ -45,8 +45,8 @@ const Spinner = styled(Loading)`
 `
 
 export const Input = styled.input`
-  font-size: 0.75rem;
-  padding: 0.75rem;
+  font-size: 1.1rem;
+  padding: 0.8rem;
   background: transparent;
   outline: none;
   border: none;
@@ -78,6 +78,13 @@ const TokenListWrapper = styled.div`
   }
 `
 
+const PopularTokenRow = styled.div<{ selected: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`
+
 const TokenRow = styled.div<{ selected: boolean }>`
   display: flex;
   justify-content: space-between;
@@ -99,7 +106,7 @@ const TokenInfo = styled.div`
 
 const TokenName = styled.div`
   color: rgba(192, 192, 192, 1);
-  font-size: 10.1px;
+  font-size: 1rem;
 `
 
 const TokenBalance = styled.div`
@@ -117,7 +124,7 @@ const Tabs = styled.div`
 
 const Tab = styled.div<{ active: boolean }>`
   color: rgba(118, 118, 118, 1);
-  font-size: 11px;
+  font-size: 1.1rem;
   font-weight: 400;
 `
 
@@ -239,8 +246,7 @@ function SelectCurrency({
       >
         {popularToken.map(token => {
           return (
-            <TokenRow
-              style={{ padding: '0' }}
+            <PopularTokenRow
               selected={token.address === selectedToken}
               key={token.address}
               onClick={() => {
@@ -263,11 +269,11 @@ function SelectCurrency({
                   }}
                 />
                 <div style={{ textAlign: 'left' }}>
-                  <span style={{ fontSize: '11.2px' }}>{token.symbol}</span>
+                  <span style={{ fontSize: '1.1rem' }}>{token.symbol}</span>
                   <TokenName>{token.name}</TokenName>
                 </div>
               </TokenInfo>
-            </TokenRow>
+            </PopularTokenRow>
           )
         })}
       </div>
@@ -314,7 +320,7 @@ function SelectCurrency({
                   }}
                 />
                 <div style={{ textAlign: 'left' }}>
-                  <span style={{ fontSize: '11.2px' }}>{token.symbol}</span>
+                  <span style={{ fontSize: '1.1rem' }}>{token.symbol}</span>
                   <TokenName>{token.name}</TokenName>
                 </div>
               </TokenInfo>
