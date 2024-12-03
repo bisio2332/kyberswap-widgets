@@ -1,15 +1,8 @@
 import { ReactNode, StrictMode, useState } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { defaultTheme, Theme } from '../../theme'
-import SettingIcon from '../../assets/setting.svg'
-import WalletIcon from '../../assets/wallet.svg'
 import DropdownIcon from '../../assets/dropdown.svg'
-import SwitchIcon from '../../assets/switch.svg'
-import SwapIcon from '../../assets/swap.svg'
-import BackIcon from '../../assets/back1.svg'
-import KyberSwapLogo from '../../assets/kyberswap.svg'
 import AlertIcon from '../../assets/alert.svg'
-import Expand from '../../assets/expand.svg'
 import questionImg from '../../assets/question.svg?url'
 
 import useTheme from '../../hooks/useTheme'
@@ -21,74 +14,97 @@ import {
   InputRow,
   InputWrapper,
   MaxHalfBtn,
-  MiddleRow,
   SelectTokenBtn,
   SettingBtn,
-  SwitchBtn,
-  Title,
   Wrapper,
   Button,
   Dots,
-  Rate,
-  MiddleLeft,
   Detail,
-  DetailTitle,
-  Divider,
   DetailRow,
   DetailLabel,
   DetailRight,
   ModalHeader,
   ModalTitle,
-  ViewRouteTitle,
+  MiddleLeft,
+  Rate,
+  TokenBtn,
+  GetInputWrapper,
+  BalanceContent,
+  CloseButton,
+  BackIconWrapper,
 } from './styled'
 
 import { BigNumber } from 'ethers'
 import { NATIVE_TOKEN, NATIVE_TOKEN_ADDRESS, SUPPORTED_NETWORKS, TokenInfo, ZIndex } from '../../constants'
-import SelectCurrency from '../SelectCurrency'
 import { useActiveWeb3, Web3Provider } from '../../hooks/useWeb3Provider'
 import useSwap from '../../hooks/useSwap'
 import useTokenBalances from '../../hooks/useTokenBalances'
 import { formatUnits } from 'ethers/lib/utils'
 import useApproval, { APPROVAL_STATE } from '../../hooks/useApproval'
-import Settings from '../Settings'
 import { TokenListProvider, useTokens } from '../../hooks/useTokens'
-import RefreshBtn from '../RefreshBtn'
 import Confirmation from '../Confirmation'
-import DexesSetting from '../DexesSetting'
-import ImportModal from '../ImportModal'
 import InfoHelper from '../InfoHelper'
 import TradeRouting from '../TradeRouting'
-import Slippage from '../Slippage'
+import SelectCurrency from '../SelectCurrency.tsx'
+import DexesSetting from '../DexesSetting.tsx'
+import ImportModal from '../ImportModal.tsx'
+import Settings from '../Settings.tsx'
+import BackIcon from '../../assets/back.svg'
 
 export const DialogWrapper = styled.div`
-  background-color: ${({ theme }) => theme.dialog};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  padding: 1rem;
-  overflow: hidden;
   z-index: ${ZIndex.DIALOG};
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 
   @supports (overflow: clip) {
     overflow: clip;
   }
 
-  transition: 0.25s ease-in-out;
-
   &.open {
-    transform: translateX(0);
+    .absolute {
+      opacity: 1;
+    }
+    .fixed {
+      opacity: 1;
+    }
   }
 
   &.close {
-    transform: translateX(100%);
+    position: absolute;
+    opacity: 0;
   }
 `
+
+export const DialogContainer = styled.div`
+  background-color: rgba(17, 16, 21, 1);
+  border-radius: ${({ theme }) => theme.borderRadius};
+  padding: 1.7rem;
+  z-index: ${ZIndex.DIALOG};
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 440px;
+
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
+
+  &.absolute {
+    position: absolute;
+    left: 3rem;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &.fixed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    width: 100%;
+  }
+`
+
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
@@ -312,7 +328,7 @@ const Widget = ({
   const modalTitle = (() => {
     switch (showModal) {
       case ModalType.SETTING:
-        return 'Settings'
+        return 'Swap Settings'
       case ModalType.CURRENCY_IN:
         return 'Select a token'
       case ModalType.CURRENCY_OUT:
@@ -355,7 +371,6 @@ const Widget = ({
             selectedToken={tokenIn}
             filterTokens={[tokenOut]}
             onChange={token => {
-              if (token.address === tokenOut) setTokenOut(tokenIn)
               setTokenIn(token.address)
               setShowModal(null)
               onSourceTokenChange?.(token)
@@ -372,7 +387,6 @@ const Widget = ({
           <SelectCurrency
             selectedToken={tokenOut}
             onChange={token => {
-              if (token.address === tokenIn) setTokenIn(tokenOut)
               setTokenOut(token.address)
               setShowModal(null)
               onDestinationTokenChange?.(token)
@@ -442,50 +456,41 @@ const Widget = ({
   return (
     <Wrapper width={width}>
       <DialogWrapper className={showModal ? 'open' : 'close'}>
-        {showModal !== ModalType.REVIEW && (
-          <ModalHeader>
-            <ModalTitle
-              onClick={() =>
-                showModal === ModalType.DEXES_SETTING ? setShowModal(ModalType.SETTING) : setShowModal(null)
-              }
-              role="button"
-            >
-              <BackIcon style={{ color: theme.subText }} />
-              {modalTitle}
-            </ModalTitle>
-          </ModalHeader>
-        )}
-        <ContentWrapper>{modalContent}</ContentWrapper>
-        <Footer>
-          <PoweredBy style={{ marginTop: '0' }}>
-            Powered By
-            <KyberSwapLogo />
-          </PoweredBy>
-          <a
-            href="https://discord.com/channels/608934314960224276/1192426056183972010"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Support
-          </a>
-        </Footer>
+        <DialogContainer className={showModal ? (showModal === ModalType.SETTING ? 'absolute' : 'fixed') : ''}>
+          {showModal !== ModalType.REVIEW && (
+            <ModalHeader>
+              <ModalTitle>{modalTitle}</ModalTitle>
+              {showModal !== ModalType.SETTING ? (
+                <BackIconWrapper onClick={() => setShowModal(null)}>
+                  <BackIcon />
+                </BackIconWrapper>
+              ) : (
+                ''
+              )}
+            </ModalHeader>
+          )}
+          <ContentWrapper>{modalContent}</ContentWrapper>
+          {showModal === ModalType.SETTING ? (
+            <CloseButton onClick={() => setShowModal(null)}>Confrim & close</CloseButton>
+          ) : (
+            ''
+          )}
+        </DialogContainer>
       </DialogWrapper>
-      <Title>
-        {title || 'Swap'}
-        <SettingBtn onClick={() => setShowModal(ModalType.SETTING)}>
-          <SettingIcon />
-        </SettingBtn>
-      </Title>
       <InputWrapper>
         <BalanceRow>
-          <div>
+          <BalanceContent>
+            <AccountBalance>
+              <span>BALANCE</span>
+              <p>{formattedTokenInBalance}</p>
+            </AccountBalance>
+
             <MaxHalfBtn onClick={() => setInputAmount(tokenInWithUnit)}>Max</MaxHalfBtn>
             {/* <MaxHalfBtn>Half</MaxHalfBtn> */}
-          </div>
-          <AccountBalance>
-            <WalletIcon />
-            {formattedTokenInBalance}
-          </AccountBalance>
+          </BalanceContent>
+          <SettingBtn onClick={() => setShowModal(ModalType.SETTING)}>
+            <span>⚙️</span>
+          </SettingBtn>
         </BalanceRow>
 
         <InputRow>
@@ -509,22 +514,6 @@ const Widget = ({
             maxLength={79}
             spellCheck="false"
           />
-
-          {!!trade?.routeSummary?.amountInUsd && (
-            <span
-              style={{
-                fontSize: '12px',
-                marginRight: '4px',
-                color: theme.subText,
-              }}
-            >
-              ~
-              {(+trade.routeSummary.amountInUsd).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
-            </span>
-          )}
 
           <SelectTokenBtn onClick={() => !isUnsupported && setShowModal(ModalType.CURRENCY_IN)}>
             {tokenInInfo ? (
@@ -550,33 +539,11 @@ const Widget = ({
         </InputRow>
       </InputWrapper>
 
-      {showRate && (
+      {/*{showRate && (
         <MiddleRow>
-          <MiddleLeft>
-            <RefreshBtn
-              loading={loading}
-              onRefresh={() => {
-                getRate()
-              }}
-              trade={trade}
-            />
-            <Rate>
-              {(() => {
-                if (!rate) return '--'
-                return !inverseRate
-                  ? `1 ${tokenInInfo?.symbol} = ${+rate.toPrecision(10)} ${tokenOutInfo?.symbol}`
-                  : `1 ${tokenOutInfo?.symbol} = ${+(1 / rate).toPrecision(10)} ${tokenInInfo?.symbol}`
-              })()}
-            </Rate>
 
-            {!!rate && (
-              <SettingBtn onClick={() => setInverseRate(prev => !prev)}>
-                <SwapIcon />
-              </SettingBtn>
-            )}
-          </MiddleLeft>
 
-          <SwitchBtn
+          {<SwitchBtn
             onClick={() => {
               setTrade(null)
               setTokenIn(tokenOut)
@@ -584,38 +551,15 @@ const Widget = ({
             }}
           >
             <SwitchIcon />
-          </SwitchBtn>
+          </SwitchBtn>}
         </MiddleRow>
-      )}
+      )}*/}
 
-      <InputWrapper>
-        <BalanceRow>
-          <div />
-          <AccountBalance>
-            <WalletIcon />
-            {formattedTokenOutBalance}
-          </AccountBalance>
-        </BalanceRow>
-
+      <GetInputWrapper>
+        <p>you get</p>
         <InputRow>
           <Input disabled value={isWrap || isUnwrap ? +amountOut : (+amountOut).toPrecision(8)} />
-
-          {!!trade?.routeSummary?.amountOutUsd && (
-            <span
-              style={{
-                fontSize: '12px',
-                marginRight: '4px',
-                color: theme.subText,
-              }}
-            >
-              ~
-              {(+trade.routeSummary.amountOutUsd).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
-            </span>
-          )}
-          <SelectTokenBtn>
+          <TokenBtn>
             {tokenOutInfo ? (
               <>
                 <img
@@ -634,57 +578,9 @@ const Widget = ({
             ) : (
               <SelectTokenText>Select a token</SelectTokenText>
             )}
-            <DropdownIcon />
-          </SelectTokenBtn>
+          </TokenBtn>
         </InputRow>
-      </InputWrapper>
-
-      <Slippage slippage={slippage} setSlippage={setSlippage} />
-
-      {showDetail && (
-        <Detail style={{ marginTop: '1rem' }}>
-          <Row>
-            <DetailTitle>More information</DetailTitle>
-            {enableRoute && !(isWrap || isUnwrap) && (
-              <ViewRouteTitle onClick={() => setShowModal(ModalType.TRADE_ROUTE)}>
-                View Routes <Expand style={{ width: 12, height: 12 }} />
-              </ViewRouteTitle>
-            )}
-          </Row>
-          <Divider />
-          <DetailRow>
-            <DetailLabel>
-              Minimum Received
-              <InfoHelper text={`Minimum amount you will receive or your transaction will revert`} />
-            </DetailLabel>
-            <DetailRight>{minAmountOut ? `${minAmountOut} ${tokenOutInfo?.symbol}` : '--'}</DetailRight>
-          </DetailRow>
-
-          <DetailRow>
-            <DetailLabel>
-              Gas Fee <InfoHelper text="Estimated network fee for your transaction" />
-            </DetailLabel>
-            <DetailRight>
-              {trade?.routeSummary?.gasUsd ? '$' + (+trade.routeSummary.gasUsd).toPrecision(4) : '--'}
-            </DetailRight>
-          </DetailRow>
-
-          <DetailRow>
-            <DetailLabel>
-              Price Impact
-              <InfoHelper text="Estimated change in price due to the size of your transaction" />
-            </DetailLabel>
-            <DetailRight
-              style={{
-                color: priceImpact > 15 ? theme.error : priceImpact > 5 ? theme.warning : theme.text,
-              }}
-            >
-              {priceImpact === -1 ? '--' : priceImpact > 0.01 ? priceImpact.toFixed(3) + '%' : '< 0.01%'}
-            </DetailRight>
-          </DetailRow>
-        </Detail>
-      )}
-
+      </GetInputWrapper>
       <Button
         disabled={!!error || loading || checkingAllowance || approvalState === APPROVAL_STATE.PENDING || isUnsupported}
         onClick={async () => {
@@ -718,21 +614,74 @@ const Widget = ({
           'Swap'
         )}
       </Button>
+      {/* <Slippage slippage={slippage} setSlippage={setSlippage} />*/}
+      {
+        <MiddleLeft>
+          {/*<RefreshBtn
+            loading={loading}
+            onRefresh={() => {
+              getRate()
+            }}
+            trade={trade}
+          />*/}
+          <Rate>
+            {(() => {
+              if (!rate) return '--'
+              return !inverseRate
+                ? `1 ${tokenInInfo?.symbol} = ${+rate.toPrecision(10)} ${tokenOutInfo?.symbol}`
+                : `1 ${tokenOutInfo?.symbol} = ${+(1 / rate).toPrecision(10)} ${tokenInInfo?.symbol}`
+            })()}
+          </Rate>
 
-      <Footer>
-        <PoweredBy>
-          Powered By
-          <KyberSwapLogo />
-        </PoweredBy>
+          {/*{!!rate && (
+            <SettingBtn onClick={() => setInverseRate(prev => !prev)}>
+              <SwapIcon />
+            </SettingBtn>
+          )}*/}
+        </MiddleLeft>
+      }
+      {showDetail && (
+        <Detail style={{ marginTop: '1rem' }}>
+          {/*<Row>
+            <DetailTitle>More information</DetailTitle>
+            {enableRoute && !(isWrap || isUnwrap) && (
+              <ViewRouteTitle onClick={() => setShowModal(ModalType.TRADE_ROUTE)}>
+                View Routes <Expand style={{ width: 12, height: 12 }} />
+              </ViewRouteTitle>
+            )}
+          </Row>*/}
+          <DetailRow>
+            <DetailLabel>
+              Minimum Received
+              <InfoHelper text={`Minimum amount you will receive or your transaction will revert`} />
+            </DetailLabel>
+            <DetailRight>{minAmountOut ? `${minAmountOut} ${tokenOutInfo?.symbol}` : '--'}</DetailRight>
+          </DetailRow>
 
-        <a
-          href="https://discord.com/channels/608934314960224276/1192426056183972010"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Support
-        </a>
-      </Footer>
+          <DetailRow>
+            <DetailLabel>
+              Gas Fee <InfoHelper text="Estimated network fee for your transaction" />
+            </DetailLabel>
+            <DetailRight>
+              {trade?.routeSummary?.gasUsd ? '$' + (+trade.routeSummary.gasUsd).toPrecision(4) : '--'}
+            </DetailRight>
+          </DetailRow>
+
+          <DetailRow>
+            <DetailLabel>
+              Price Impact
+              <InfoHelper text="Estimated change in price due to the size of your transaction" />
+            </DetailLabel>
+            <DetailRight
+              style={{
+                color: priceImpact > 15 ? theme.error : priceImpact > 5 ? theme.warning : theme.text,
+              }}
+            >
+              {priceImpact === -1 ? '--' : priceImpact > 0.01 ? priceImpact.toFixed(3) + '%' : '< 0.01%'}
+            </DetailRight>
+          </DetailRow>
+        </Detail>
+      )}
     </Wrapper>
   )
 }

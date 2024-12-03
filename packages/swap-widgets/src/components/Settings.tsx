@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import useTheme from '../hooks/useTheme'
-import BackIcon from '../assets/back1.svg'
 import { Dex } from '../hooks/useSwap'
 import AlertIcon from '../assets/alert.svg'
 import InfoHelper from './InfoHelper'
@@ -9,6 +8,8 @@ import InfoHelper from './InfoHelper'
 const Label = styled.div`
   font-size: 0.75rem;
   text-align: left;
+  color: rgba(192, 192, 192, 1);
+  font-weight: 400;
 `
 
 const Input = styled.input<{ isActive: boolean }>`
@@ -28,10 +29,11 @@ const Input = styled.input<{ isActive: boolean }>`
 
 const SlippageWrapper = styled.div`
   border-radius: 999px;
-  margin-top: 8px;
-  background: ${({ theme }) => theme.secondary};
   padding: 2px;
+  background-color: rgb(17, 16, 21);
   display: flex;
+  border: 1px solid rgba(118, 118, 118, 1);
+  max-width: 115px;
 `
 
 const SlippageItem = styled.div<{ isActive: boolean }>`
@@ -46,13 +48,17 @@ const SlippageItem = styled.div<{ isActive: boolean }>`
   align-items: center;
   gap: 4px;
   justify-content: center;
-  background: ${({ theme, isActive }) => (isActive ? theme.dialog : theme.secondary)};
+  background-color: rgb(17, 16, 21);
   cursor: pointer;
   :hover {
-    background: ${({ theme }) => theme.dialog};
+    background: linear-gradient(103.19deg, rgba(179, 126, 77, 0.4) 0%, rgba(87, 87, 87, 0.1) 100%, #575757 100%);
+    color: #fff;
     input {
-      background: ${({ theme }) => theme.dialog};
+      background: transparent;
     }
+  }
+  input {
+    background: transparent;
   }
 `
 
@@ -67,11 +73,13 @@ const TTLInput = styled.div`
   padding: 6px 8px;
   gap: 4px;
   border-radius: 999px;
-  background: ${({ theme }) => theme.secondary};
+  background-color: rgb(17, 16, 21);
+  border: 1px solid rgba(118, 118, 118, 1);
   color: ${({ theme }) => theme.text};
   font-size: 12px;
   font-weight: 500;
   text-align: right;
+  max-width: 103px;
 
   input {
     border: none;
@@ -79,6 +87,7 @@ const TTLInput = styled.div`
     padding: 0;
     background: transparent;
     text-align: right;
+    width: 80%;
     color: ${({ theme }) => theme.text};
   }
 `
@@ -157,7 +166,7 @@ export const SlippageInput = ({
   return (
     <>
       <SlippageWrapper>
-        <SlippageItem isActive={slippage === 5} onClick={() => setSlippage(5)}>
+        {/* <SlippageItem isActive={slippage === 5} onClick={() => setSlippage(5)}>
           0.05%
         </SlippageItem>
         <SlippageItem isActive={slippage === 10} onClick={() => setSlippage(10)}>
@@ -165,7 +174,7 @@ export const SlippageInput = ({
         </SlippageItem>
         <SlippageItem isActive={slippage === 50} onClick={() => setSlippage(50)}>
           0.5%
-        </SlippageItem>
+        </SlippageItem>*/}
         <SlippageItem isActive={slippage === 100} onClick={() => setSlippage(100)}>
           1%
         </SlippageItem>
@@ -240,7 +249,7 @@ function Settings({
 
   return (
     <>
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Label>
           Max Slippage
           <InfoHelper
@@ -276,34 +285,6 @@ function Settings({
           />
           <span style={{ color: theme.subText }}>mins</span>
         </TTLInput>
-      </Row>
-
-      <Row>
-        <Label>
-          Liquidity Sources
-          <InfoHelper color={theme.text} text={`Your trade is routed through one or more of these liquidity sources`} />
-        </Label>
-        <div
-          role="button"
-          onClick={onShowSource}
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            fontSize: 12,
-            fontWeight: 500,
-            gap: 4,
-            cursor: 'pointer',
-          }}
-        >
-          {allDexes.length - excludedDexes.length || allDexes.length} out of {allDexes.length} selected
-          <BackIcon
-            style={{
-              transform: 'rotate(-180deg)',
-              width: '16px',
-              color: theme.subText,
-            }}
-          />
-        </div>
       </Row>
     </>
   )

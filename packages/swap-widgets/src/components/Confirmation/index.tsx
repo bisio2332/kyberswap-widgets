@@ -1,13 +1,24 @@
 import styled, { keyframes } from 'styled-components'
 import { Trade } from '../../hooks/useSwap'
 import Warning from '../../assets/warning.svg'
-import { Button, Detail, DetailLabel, DetailRight, DetailRow, ModalHeader, ModalTitle } from '../Widget/styled'
+import {
+  BackIconWrapper,
+  BorderButton,
+  Button,
+  Detail,
+  DetailLabel,
+  DetailRight,
+  DetailRow,
+  ModalHeader,
+  ModalTitle,
+} from '../Widget/styled'
 import useTheme from '../../hooks/useTheme'
 import { useActiveWeb3 } from '../../hooks/useWeb3Provider'
 import { useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
 import { AGGREGATOR_PATH, NATIVE_TOKEN_ADDRESS, SCAN_LINK, TokenInfo, WRAPPED_NATIVE_TOKEN } from '../../constants'
 import BackIcon from '../../assets/back.svg'
+import ArrowIcon from '../../assets/arrow.svg'
 import Loading from '../../assets/loader.svg'
 import External from '../../assets/external.svg'
 import SuccessSVG from '../../assets/success.svg'
@@ -32,8 +43,14 @@ const ArrowDown = styled(BackIcon)`
   transform: rotate(-90deg);
 `
 
+const Arrow = styled(ArrowIcon)`
+  color: ${({ theme }) => theme.subText};
+  transform: rotate(-90deg);
+`
+
 const Flex = styled.div`
   display: flex;
+  justify-content: space-between;
   font-size: 1.5rem;
   gap: 0.5rem;
   align-items: center;
@@ -41,6 +58,28 @@ const Flex = styled.div`
 
   img {
     border-radius: 50%;
+  }
+`
+
+const CountWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+`
+const Count = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0.4rem;
+  font-size: 1.25rem;
+  padding: 0.25rem;
+  &:before {
+    content: '';
+    width: 1rem;
+    height: 1px;
+    background: rgba(118, 118, 118, 1);
+    position: absolute;
+    bottom: 0;
   }
 `
 
@@ -104,7 +143,7 @@ const ViewTx = styled.a`
 const Divider = styled.div`
   width: 100%;
   height: 1px;
-  border-bottom: 1px solid ${({ theme }) => theme.stroke};
+  background: linear-gradient(103.36deg, rgba(195, 156, 75, 0.4) 0%, rgba(91, 91, 91, 0.1) 100%);
 `
 
 const WaitingText = styled.div`
@@ -115,10 +154,52 @@ const WaitingText = styled.div`
 const Amount = styled.div`
   display: flex;
   align-items: center;
-  font-size: 14px;
+  justify-content: space-between;
+  width: 100%;
   gap: 6px;
+  margin-top: 30px;
+  margin-bottom: 20px;
   img {
     border-radius: 50%;
+  }
+`
+
+const AmountWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  gap: 6px;
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    span {
+      position: relative;
+      margin: 0.25rem 0 0 0 !important;
+      padding: 0.25rem 0 0 0;
+      font-size: 14px !important;
+      &:before {
+        content: '';
+        width: 1rem;
+        height: 1px;
+        background: rgba(118, 118, 118, 1);
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+  }
+  img {
+    border-radius: 50%;
+  }
+  .right-side {
+    align-items: flex-start;
+    span {
+      &:before {
+        right: auto;
+        left: 0;
+      }
+    }
   }
 `
 
@@ -362,25 +443,61 @@ function Confirmation({
             <WaitingText>Waiting For Confirmation</WaitingText>
           )}
           <Amount>
-            <img src={tokenInInfo.logoURI} width="16" height="16" alt="" />
-            {+Number(snapshotTrade?.amountIn).toPrecision(6)}
-            <BackIcon style={{ width: 16, transform: 'rotate(180deg)' }} />
-            <img src={tokenOutInfo.logoURI} width="16" height="16" alt="" />
-            {+Number(snapshotTrade?.amountOut).toPrecision(6)}
+            <AmountWrapper>
+              <div style={{ marginRight: '10px' }}>
+                {+Number(snapshotTrade?.amountIn).toPrecision(6)}
+                {!!trade?.routeSummary?.amountInUsd && (
+                  <span
+                    style={{
+                      marginRight: '4px',
+                      color: theme.subText,
+                    }}
+                  >
+                    ~
+                    {(+trade.routeSummary.amountInUsd).toLocaleString('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    })}
+                  </span>
+                )}
+              </div>
+              <img src={tokenInInfo.logoURI} width="44" height="44" alt="" />
+            </AmountWrapper>
+            <Arrow style={{ transform: 'rotate(180deg)', color: 'rgba(239, 239, 239, 1)' }} />
+            <AmountWrapper>
+              <img src={tokenOutInfo.logoURI} width="44" height="44" alt="" />
+              <div className={'right-side'}>
+                {+Number(snapshotTrade?.amountOut).toPrecision(6)}
+                {!!trade?.routeSummary?.amountOutUsd && (
+                  <span
+                    style={{
+                      marginRight: '4px',
+                      color: theme.subText,
+                    }}
+                  >
+                    ~
+                    {(+trade.routeSummary.amountOutUsd).toLocaleString('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    })}
+                  </span>
+                )}
+              </div>
+            </AmountWrapper>
           </Amount>
           {!txHash && <SubText>Confirm this transaction in your wallet</SubText>}
           {txHash && txStatus === '' && <SubText>Waiting for the transaction to be mined</SubText>}
         </Central>
-
-        <Divider />
-        {txHash && (
-          <ViewTx href={`${SCAN_LINK[chainId]}/tx/${txHash}`} target="_blank" rel="noopener norefferer">
-            View transaction <External />
-          </ViewTx>
-        )}
-        <Button style={{ marginTop: 0 }} onClick={onClose}>
-          Close
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+          {txHash && (
+            <BorderButton href={`${SCAN_LINK[chainId]}/tx/${txHash}`} target="_blank" rel="noopener norefferer">
+              view txn <External />
+            </BorderButton>
+          )}
+          <Button style={{ marginTop: 0 }} onClick={onClose}>
+            Back to app
+          </Button>
+        </div>
       </>
     )
 
@@ -426,14 +543,37 @@ function Confirmation({
 
   return (
     <>
-      <ModalHeader>
-        <ModalTitle onClick={onClose} role="button">
-          <BackIcon />
-          Confirm swap
+      <ModalHeader style={{ marginBottom: '20px' }}>
+        <ModalTitle role="button">
+          You’re swapping
+          <BackIconWrapper onClick={onClose}>
+            <BackIcon />
+          </BackIconWrapper>
         </ModalTitle>
       </ModalHeader>
 
       <Flex>
+        <CountWrapper>
+          <Count>
+            {+Number(amountIn).toPrecision(10)}
+            <div>{tokenInInfo.symbol}</div>
+          </Count>
+          {!!trade?.routeSummary?.amountInUsd && (
+            <span
+              style={{
+                fontSize: '12px',
+                marginRight: '4px',
+                color: theme.subText,
+              }}
+            >
+              ~
+              {(+trade.routeSummary.amountInUsd).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </span>
+          )}
+        </CountWrapper>
         <img
           src={tokenInInfo.logoURI}
           width="28"
@@ -444,13 +584,32 @@ function Confirmation({
             currentTarget.src = questionImg
           }}
         />
-        {+Number(amountIn).toPrecision(10)}
-        <div>{tokenInInfo.symbol}</div>
       </Flex>
 
-      <ArrowDown />
+      <Arrow style={{ transform: 'rotate(-90deg)', color: 'rgba(239, 239, 239, 1)' }} />
 
       <Flex>
+        <CountWrapper>
+          <Count>
+            {+Number(amountOut).toPrecision(10)}
+            <div>{tokenOutInfo.symbol}</div>
+          </Count>
+          {!!trade?.routeSummary?.amountOutUsd && (
+            <span
+              style={{
+                fontSize: '12px',
+                marginRight: '4px',
+                color: theme.subText,
+              }}
+            >
+              ~
+              {(+trade.routeSummary.amountOutUsd).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </span>
+          )}
+        </CountWrapper>
         <img
           alt=""
           src={tokenOutInfo.logoURI}
@@ -461,25 +620,23 @@ function Confirmation({
             currentTarget.src = questionImg
           }}
         />
-        {+Number(amountOut).toPrecision(10)}
-        <div>{tokenOutInfo.symbol}</div>
       </Flex>
-
-      {isWrap || isUnwrap ? null : (
+      <Divider />
+      {/*{isWrap || isUnwrap ? null : (
         <Note>
           Output is estimated. You will receive at least {minAmountOut} {tokenOutInfo.symbol} or the transaction will
           revert.
         </Note>
-      )}
+      )}*/}
 
       {showDetail && (
         <Detail>
-          <DetailRow>
+          {/* <DetailRow>
             <DetailLabel>Current Price</DetailLabel>
             <DetailRight>
               1 {tokenInInfo.symbol} = {parseFloat(rate.toPrecision(6))} {tokenOutInfo.symbol}
             </DetailRight>
-          </DetailRow>
+          </DetailRow>*/}
 
           <DetailRow>
             <DetailLabel>
@@ -517,10 +674,10 @@ function Confirmation({
             </DetailRight>
           </DetailRow>
 
-          <DetailRow>
+          {/*<DetailRow>
             <DetailLabel>Slippage</DetailLabel>
             <DetailRight>{(slippage * 100) / 10_000}%</DetailRight>
-          </DetailRow>
+          </DetailRow>*/}
         </Detail>
       )}
 
@@ -539,7 +696,7 @@ function Confirmation({
             Unable to calculate Price Impact
           </PriceImpactHigh>
         ) : null}
-        <Button onClick={confirmSwap}>Confirm {isWrap ? 'wrap' : isUnwrap ? 'unwrap' : 'swap'}</Button>
+        <Button onClick={confirmSwap}>💸 Confirm and {isWrap ? 'wrap' : isUnwrap ? 'unwrap' : 'swap'}</Button>
       </div>
     </>
   )

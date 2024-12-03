@@ -4,7 +4,7 @@ import { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { TokenInfo as TokenDetail, NATIVE_TOKEN, NATIVE_TOKEN_ADDRESS } from '../constants'
 import useTokenBalances from '../hooks/useTokenBalances'
-import { useImportedTokens, useTokens } from '../hooks/useTokens'
+import { useTokens } from '../hooks/useTokens'
 import { useActiveWeb3 } from '../hooks/useWeb3Provider'
 import Loading from '../assets/loader.svg'
 import Question from '../assets/question.svg'
@@ -47,11 +47,11 @@ const Spinner = styled(Loading)`
 export const Input = styled.input`
   font-size: 0.75rem;
   padding: 0.75rem;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  background: ${({ theme }) => theme.secondary};
+  background: transparent;
   outline: none;
   border: none;
   color: ${({ theme }) => theme.text};
+  width: 100%;
 `
 
 const TokenListWrapper = styled.div`
@@ -85,10 +85,8 @@ const TokenRow = styled.div<{ selected: boolean }>`
   padding: 0.5rem 0.75rem;
   cursor: pointer;
 
-  background: ${({ theme, selected }) => (selected ? theme.secondary : 'transparent')};
-
   :hover {
-    background: ${({ theme }) => theme.secondary};
+    background: rgba(22, 21, 27, 1);
   }
 `
 
@@ -100,8 +98,8 @@ const TokenInfo = styled.div`
 `
 
 const TokenName = styled.div`
-  color: ${({ theme }) => theme.subText};
-  font-size: 0.75rem;
+  color: rgba(192, 192, 192, 1);
+  font-size: 10.1px;
 `
 
 const TokenBalance = styled.div`
@@ -112,18 +110,15 @@ const TokenBalance = styled.div`
 `
 
 const Tabs = styled.div`
-  padding-bottom: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.stroke};
   display: flex;
   gap: 24px;
   cursor: pointer;
 `
 
 const Tab = styled.div<{ active: boolean }>`
-  color: ${({ theme, active }) => (active ? theme.accent : theme.text)};
-  hover: ${({ theme }) => theme.accent};
-  font-size: 14px;
-  font-weight: 500;
+  color: rgba(118, 118, 118, 1);
+  font-size: 11px;
+  font-weight: 400;
 `
 
 const NotFound = styled.div`
@@ -173,17 +168,9 @@ function SelectCurrency({
   const [search, setSearch] = useState('')
   const tokenAddress = tokens.map(item => item.address)
   const { balances, loading } = useTokenBalances(tokenAddress)
-  const { removeToken } = useImportedTokens()
 
   const { chainId } = useActiveWeb3()
-
   const tokenWithBalances = [
-    {
-      ...NATIVE_TOKEN[chainId],
-      balance: balances[NATIVE_TOKEN_ADDRESS],
-      formattedBalance: formatUnits(balances[NATIVE_TOKEN_ADDRESS] || BigNumber.from(0), 18),
-    },
-
     ...tokens
       .filter(item => !(filterTokens || []).some(token => token === item.address))
       .map(item => {
@@ -200,83 +187,140 @@ function SelectCurrency({
       token.symbol.toLowerCase().includes(search.toLowerCase()),
   )
 
-  const [tab, setTab] = useState<'all' | 'imported'>('all')
+  const popularToken = [
+    {
+      ...{
+        name: 'UCDC',
+        symbol: ' USD Coin',
+        decimals: 18,
+        address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        chainId: 1,
+        logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+      },
+      balance: balances['0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'],
+      formattedBalance: formatUnits(balances['0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'] || BigNumber.from(0), 18),
+    },
+    {
+      ...NATIVE_TOKEN[chainId],
+      balance: balances[NATIVE_TOKEN_ADDRESS],
+      formattedBalance: formatUnits(balances[NATIVE_TOKEN_ADDRESS] || BigNumber.from(0), 18),
+    },
+    {
+      ...{
+        name: 'UCDT',
+        symbol: 'Tether USD',
+        decimals: 18,
+        address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+        chainId: 1,
+        logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
+      },
+      balance: balances[NATIVE_TOKEN_ADDRESS],
+      formattedBalance: formatUnits(balances[NATIVE_TOKEN_ADDRESS] || BigNumber.from(0), 18),
+    },
+  ]
+
+  const [tab] = useState<'all' | 'imported'>('all')
 
   return (
     <>
-      <Input
-        placeholder="Search by token name, token symbol or address"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
-
-      <Tabs>
-        <Tab active={tab === 'all'} onClick={() => setTab('all')} role="button">
-          All
-        </Tab>
-        <Tab active={tab === 'imported'} onClick={() => setTab('imported')} role="button">
-          Imported
+      <Tabs style={{ paddingTop: '20px' }}>
+        <Tab active={tab === 'all'} role="button">
+          Popular
         </Tab>
       </Tabs>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingRight: '16px',
+          paddingBottom: '28px',
+        }}
+      >
+        {popularToken.map(token => {
+          return (
+            <TokenRow
+              style={{ padding: '0' }}
+              selected={token.address === selectedToken}
+              key={token.address}
+              onClick={() => {
+                onChange(token)
+              }}
+            >
+              <TokenInfo>
+                <img
+                  src={token.logoURI}
+                  width="37"
+                  height="37"
+                  alt="logo"
+                  style={{
+                    borderRadius: '999px',
+                  }}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null // prevents looping
+                    console.log(questionImg)
+                    currentTarget.src = questionImg
+                  }}
+                />
+                <div style={{ textAlign: 'left' }}>
+                  <span style={{ fontSize: '11.2px' }}>{token.symbol}</span>
+                  <TokenName>{token.name}</TokenName>
+                </div>
+              </TokenInfo>
+            </TokenRow>
+          )
+        })}
+      </div>
+      <Tabs>
+        <Tab active={tab === 'all'} role="button">
+          All tokens
+        </Tab>
+      </Tabs>
+      <div
+        style={{ display: 'flex', alignItems: 'center', width: '100%', borderBottom: '1px solid rgba(61, 60, 66, 1)' }}
+      >
+        🔍
+        <Input placeholder="search tokens" value={search} onChange={e => setSearch(e.target.value)} />
+      </div>
       <TokenListWrapper>
         {!tokenWithBalances.length && isAddress(search.trim()) && (
           <ImportToken address={search.trim()} onImport={onImport}></ImportToken>
         )}
 
-        {!tokenWithBalances.filter(item => (tab === 'imported' ? item.isImport : true)).length &&
-          !isAddress(search.trim()) && <NotFound>No results found</NotFound>}
+        {!tokenWithBalances.length && !isAddress(search.trim()) && <NotFound>No results found</NotFound>}
 
-        {tokenWithBalances
-          .filter(item => (tab === 'imported' ? item.isImport : true))
-          .map(token => {
-            return (
-              <TokenRow
-                selected={token.address === selectedToken}
-                key={token.address}
-                onClick={() => {
-                  onChange(token)
-                }}
-              >
-                <TokenInfo>
-                  <img
-                    src={token.logoURI}
-                    width="24"
-                    height="24"
-                    alt="logo"
-                    style={{
-                      borderRadius: '999px',
-                    }}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null // prevents looping
-                      console.log(questionImg)
-                      currentTarget.src = questionImg
-                    }}
-                  />
-                  <div style={{ textAlign: 'left' }}>
-                    <span>{token.symbol}</span>
-                    <TokenName>{token.name}</TokenName>
-                  </div>
-                </TokenInfo>
-
-                {tab === 'imported' ? (
-                  <Trash
-                    onClick={e => {
-                      e.stopPropagation()
-                      removeToken(token)
-                    }}
-                  />
-                ) : loading ? (
-                  <Spinner />
-                ) : (
-                  <TokenBalance>
-                    {token.balance && parseFloat(token.formattedBalance) < 0.000001
-                      ? token.formattedBalance
-                      : parseFloat(parseFloat(token.formattedBalance).toPrecision(10))}
-                  </TokenBalance>
-                )}
-              </TokenRow>
-            )
-          })}
+        {tokenWithBalances.map(token => {
+          return (
+            <TokenRow
+              selected={token.address === selectedToken}
+              key={token.address}
+              onClick={() => {
+                onChange(token)
+              }}
+            >
+              <TokenInfo>
+                <img
+                  src={token.logoURI}
+                  width="37"
+                  height="37"
+                  alt="logo"
+                  style={{
+                    borderRadius: '999px',
+                  }}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null // prevents looping
+                    console.log(questionImg)
+                    currentTarget.src = questionImg
+                  }}
+                />
+                <div style={{ textAlign: 'left' }}>
+                  <span style={{ fontSize: '11.2px' }}>{token.symbol}</span>
+                  <TokenName>{token.name}</TokenName>
+                </div>
+              </TokenInfo>
+            </TokenRow>
+          )
+        })}
       </TokenListWrapper>
     </>
   )

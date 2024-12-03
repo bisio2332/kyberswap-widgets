@@ -8,12 +8,9 @@ export const Wrapper = styled.div<WrapperProps>`
   border-radius: ${({ theme }) => theme.borderRadius};
   padding: 1rem;
   width: ${({ width }) => `${width || 375}px`};
-  background: ${({ theme }) => theme.primary};
+  background: transparent;
   color: ${({ theme }) => theme.text};
-  font-family: ${({ theme }) => theme.fontFamily || `"Work Sans", "Inter var", sans-serif`};
   position: relative;
-  overflow: hidden;
-  box-shadow: ${({ theme }) => theme.boxShadow};
   height: max-content;
 `
 
@@ -27,24 +24,39 @@ export const Title = styled.div`
 
 export const InputWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
-  padding: 0.75rem;
-  background: ${({ theme }) => theme.secondary};
+  padding: 1.125rem 1rem 1.125rem 1.6rem;
+  background: rgba(39, 38, 44, 1);
   margin-top: 1rem;
   box-shadow: ${({ theme }) => theme.boxShadow};
+`
+
+export const GetInputWrapper = styled.div`
+  border-radius: ${({ theme }) => theme.borderRadius};
+  padding: 1.125rem 1.6rem;
+  background: rgba(22, 21, 27, 1);
+  margin-top: 0.25rem;
+  box-shadow: ${({ theme }) => theme.boxShadow};
+  p {
+    color: rgba(118, 118, 118, 1);
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin: 0 0 2rem 0;
+  }
 `
 
 export const MaxHalfBtn = styled.button`
   outline: none;
   border: none;
-  background: ${({ theme }) => theme.interactive};
+  background: linear-gradient(103.19deg, rgba(179, 126, 77, 0.4) 0%, rgba(87, 87, 87, 0.1) 100%, #575757 100%);
   border-radius: ${({ theme }) => theme.buttonRadius};
   color: ${({ theme }) => theme.subText};
-  font-size: 0.75rem;
-  padding: 0.125rem 0.5rem;
+  font-size: 0.6rem;
+  padding: 0.25rem;
   font-weight: 500;
   cursor: pointer;
-  margin-right: 0.25rem;
-
+  margin: 0 0.5rem;
+  text-transform: lowercase;
   :hover {
     opacity: 0.8;
   }
@@ -54,14 +66,20 @@ export const BalanceRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2.5rem;
+`
+
+export const BalanceContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 
 export const SettingBtn = styled.button`
   outline: none;
   border: none;
   border-radius: ${({ theme }) => theme.buttonRadius};
-  width: 2.25rem;
-  height: 2.25rem;
+  padding: 0;
   background: transparent;
   cursor: pointer;
   display: flex;
@@ -70,7 +88,7 @@ export const SettingBtn = styled.button`
   color: ${({ theme }) => theme.subText};
 
   :hover {
-    background: ${({ theme }) => theme.secondary};
+    opacity: 0.8;
   }
 
   svg {
@@ -94,7 +112,15 @@ export const AccountBalance = styled.div`
   display: flex;
   align-items: center;
   font-size: 0.75rem;
+  line-height: 0.8rem;
   color: ${({ theme }) => theme.subText};
+  span {
+    color: rgba(192, 192, 192, 0.2);
+  }
+  p {
+    margin: 0;
+    color: rgba(192, 192, 192, 1);
+  }
 `
 
 export const InputRow = styled.div`
@@ -106,7 +132,7 @@ export const InputRow = styled.div`
 export const Input = styled.input`
   width: 100%;
   font-size: 1.5rem;
-  background: ${({ theme }) => theme.secondary};
+  background: transparent;
   outline: none;
   border: none;
   color: ${({ theme }) => theme.text};
@@ -119,7 +145,7 @@ export const Input = styled.input`
 export const SelectTokenBtn = styled.button`
   outline: none;
   border: none;
-  background: ${({ theme }) => theme.interactive};
+  background: rgba(17, 16, 21, 1);
   border-radius: ${({ theme }) => theme.buttonRadius};
   padding: 0.375rem 0 0.375rem 0.5rem;
   font-size: 1.125rem;
@@ -134,6 +160,19 @@ export const SelectTokenBtn = styled.button`
   }
 `
 
+export const TokenBtn = styled.button`
+  outline: none;
+  border: none;
+  background: transparent;
+  border-radius: ${({ theme }) => theme.buttonRadius};
+  padding: 0.375rem 0 0.375rem 0.5rem;
+  font-size: 1.125rem;
+  color: rgba(192, 192, 192, 1);
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+`
+
 export const MiddleRow = styled.div`
   display: flex;
   margin-top: 1rem;
@@ -146,20 +185,78 @@ export const MiddleLeft = styled.div`
   align-items: center;
 `
 
+export const CloseButton = styled.button`
+  outline: none;
+  border: none;
+  border-radius: ${({ theme }) => theme.buttonRadius};
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  padding: 0.75rem;
+  background: linear-gradient(103.19deg, rgba(124, 124, 124, 0.57) 0%, rgba(91, 91, 91, 0.1) 100%);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: ${({ theme }) => theme.boxShadow};
+
+  :disabled {
+    color: ${({ theme }) => theme.subText};
+    background: ${({ theme }) => theme.interactive};
+    cursor: not-allowed;
+
+    :active {
+      transform: none;
+    }
+  }
+
+  :active {
+    transform: scale(0.99);
+  }
+`
+
 export const Button = styled.button`
   outline: none;
   border: none;
   border-radius: ${({ theme }) => theme.buttonRadius};
   width: 100%;
-  margin-top: 1rem;
-  font-size: 1rem;
-  font-weight: 500;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  font-weight: 400;
   padding: 0.75rem;
-  background: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.dialog};
+  background: linear-gradient(103.19deg, rgba(179, 126, 77, 0.4) 0%, rgba(87, 87, 87, 0.1) 100%, #575757 100%);
+  color: #fff;
   cursor: pointer;
   box-shadow: ${({ theme }) => theme.boxShadow};
 
+  :disabled {
+    color: ${({ theme }) => theme.subText};
+    background: ${({ theme }) => theme.interactive};
+    cursor: not-allowed;
+
+    :active {
+      transform: none;
+    }
+  }
+
+  :active {
+    transform: scale(0.99);
+  }
+`
+
+export const BorderButton = styled.a`
+  outline: none;
+  border: 1px solid rgba(192, 192, 192, 1);
+  border-radius: ${({ theme }) => theme.buttonRadius};
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  padding: 0.75rem;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  max-width: 115px;
   :disabled {
     color: ${({ theme }) => theme.subText};
     background: ${({ theme }) => theme.interactive};
@@ -199,15 +296,10 @@ export const Dots = styled.span`
 export const Rate = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.subText};
-  margin-left: 4px;
+  color: rgba(192, 192, 192, 1);
 `
 
 export const Detail = styled.div`
-  background: ${({ theme }) => theme.secondary};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  border: 1px solid ${({ theme }) => theme.stroke};
-  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -221,7 +313,7 @@ export const DetailRow = styled.div`
 export const DetailLabel = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.subText};
+  color: rgba(192, 192, 192, 1);
 `
 export const DetailRight = styled.div`
   font-weight: 500;
@@ -256,18 +348,31 @@ export const ModalHeader = styled.div`
 `
 
 export const ModalTitle = styled.div`
-  cursor: pointer;
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  font-size: 1.25rem;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.75rem;
   font-weight: 500;
-  :hover {
-    opacity: 0.8;
-  }
+  color: rgba(118, 118, 118, 1);
+`
+export const BackIconWrapper = styled.div`
+  background: rgba(39, 38, 44, 1);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
 
   > svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  :hover {
+    opacity: 0.8;
   }
 `

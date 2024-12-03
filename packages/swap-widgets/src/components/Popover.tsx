@@ -17,7 +17,6 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.32);
   color: ${({ theme }) => theme.subText};
   border-radius: 16px;
-  font-family: ${({ theme }) => theme.fontFamily || `"Work Sans", "Inter var", sans-serif`};
 `
 
 const ReferenceElement = styled.div`

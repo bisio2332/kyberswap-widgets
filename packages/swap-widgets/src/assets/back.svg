@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="SwapSettingsPanel__BackIconWrapper-sc-riij1g-0 LgspM"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.73242 3.26758L3.26745 9.73255" stroke="#C0C0C0" stroke-width="1.14286"/>
+    <path d="M9.73242 3.26758L3.26745 9.73255" stroke="black" stroke-opacity="0.2" stroke-width="1.14286"/>
+    <path d="M3.26758 3.26758L9.73255 9.73255" stroke="#C0C0C0" stroke-width="1.14286"/>
+    <path d="M3.26758 3.26758L9.73255 9.73255" stroke="black" stroke-opacity="0.2" stroke-width="1.14286"/>
+</svg>
