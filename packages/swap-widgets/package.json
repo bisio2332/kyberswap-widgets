@@ -1,7 +1,7 @@
 {
   "name": "@dein-platform/kyberswap-widget",
   "license": "MIT",
-  "version": "1.3.16",
+  "version": "1.3.17",
   "type": "module",
   "scripts": {
     "dev": "tsup --watch",
