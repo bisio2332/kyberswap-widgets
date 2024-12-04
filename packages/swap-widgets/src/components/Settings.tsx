@@ -6,7 +6,7 @@ import AlertIcon from '../assets/alert.svg'
 import InfoHelper from './InfoHelper'
 
 const Label = styled.div`
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   text-align: left;
   color: rgba(192, 192, 192, 1);
   font-weight: 400;
@@ -33,7 +33,7 @@ const SlippageWrapper = styled.div`
   background-color: rgb(17, 16, 21);
   display: flex;
   border: 1px solid rgba(118, 118, 118, 1);
-  max-width: 10rem;
+  max-width: 12rem;
 `
 
 const SlippageItem = styled.div<{ isActive: boolean }>`
@@ -79,7 +79,7 @@ const TTLInput = styled.div`
   font-size: 1.2rem;
   font-weight: 500;
   text-align: right;
-  max-width: 8.6rem;
+  max-width: 12rem;
 
   input {
     border: none;
@@ -190,7 +190,6 @@ export const SlippageInput = ({
           {message && (
             <AlertIcon
               style={{
-                position: 'absolute',
                 top: 2,
                 left: 4,
                 width: 20,
@@ -217,12 +216,13 @@ export const SlippageInput = ({
         <div
           style={{
             fontSize: '9px',
+            lineHeight: '9px',
             color: isValid ? theme.warning : theme.error,
             textAlign: 'left',
             marginTop: '4px',
             position: 'absolute',
             right: '3px',
-            bottom: '-9px',
+            bottom: '-10px',
           }}
         >
           {message}
