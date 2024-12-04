@@ -154,7 +154,7 @@ export const SelectTokenBtn = styled.button`
   align-items: center;
   font-weight: 500;
   cursor: pointer;
-  width: 10rem;
+  width: 12rem;
   :hover {
     opacity: 0.8;
   }
@@ -171,7 +171,7 @@ export const TokenBtn = styled.button`
   display: flex;
   align-items: center;
   font-weight: 500;
-  width: 6rem;
+  width: 9rem;
 `
 
 export const MiddleRow = styled.div`
