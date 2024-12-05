@@ -32,6 +32,7 @@ import {
   BalanceContent,
   CloseButton,
   BackIconWrapper,
+  ChevronBtn,
 } from './styled'
 
 import { BigNumber } from 'ethers'
@@ -243,6 +244,10 @@ const Widget = ({
   width?: number
 }) => {
   const [showModal, setShowModal] = useState<ModalType | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleClass = () => {
+    setIsOpen(prevState => !prevState)
+  }
   const { chainId } = useActiveWeb3()
   const isUnsupported = !SUPPORTED_NETWORKS.includes(chainId.toString())
 
@@ -544,7 +549,7 @@ const Widget = ({
             ) : (
               <SelectTokenText>Select a token</SelectTokenText>
             )}
-            <DropdownIcon style={{ marginLeft: '0.8rem', width: '0.4rem', height: '0.8rem' }} />
+            <DropdownIcon style={{ marginLeft: '0.8rem', width: '0.4rem', height: '0.8rem', flexShrink: '0' }} />
           </SelectTokenBtn>
         </InputRow>
       </InputWrapper>
@@ -645,6 +650,34 @@ const Widget = ({
                 : `1 ${tokenOutInfo?.symbol} = ${+(1 / rate).toPrecision(10)} ${tokenInInfo?.symbol}`
             })()}
           </Rate>
+          <ChevronBtn onClick={toggleClass} className={isOpen ? 'open' : 'close'}>
+            <svg className={'pump'} viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M13.578 4.32L13.5873 4.30867L10.9207 2.14867L10.0807 3.18467L11.4587 4.30067C11.1168 4.5084 10.8454 4.81417 10.6796 5.17822C10.5139 5.54228 10.4615 5.94778 10.5293 6.342C10.6293 6.94133 11.042 7.45933 11.576 7.74933C12.1727 8.074 12.696 8.044 13.1613 7.87867L13.1513 12C13.1521 12.1104 13.1254 12.2192 13.0735 12.3167C13.0217 12.4142 12.9464 12.4972 12.8544 12.5582C12.7624 12.6192 12.6566 12.6563 12.5467 12.6662C12.4367 12.676 12.326 12.6583 12.2247 12.6147C12.1453 12.5806 12.0733 12.5315 12.0127 12.47C11.8884 12.3451 11.8187 12.1761 11.8187 12L11.834 10.6667C11.8347 10.4043 11.7833 10.1443 11.683 9.90184C11.5826 9.65937 11.4352 9.43919 11.2493 9.254C11.0636 9.06787 10.843 8.92019 10.6001 8.81941C10.3573 8.71863 10.0969 8.66672 9.83398 8.66667H9.16732V3.33333C9.16732 2.97971 9.02684 2.64057 8.77679 2.39052C8.52674 2.14048 8.18761 2 7.83398 2H3.16732C2.8137 2 2.47456 2.14048 2.22451 2.39052C1.97446 2.64057 1.83398 2.97971 1.83398 3.33333V12.6667C1.83398 13.0203 1.97446 13.3594 2.22451 13.6095C2.47456 13.8595 2.8137 14 3.16732 14H7.83398C8.18761 14 8.52674 13.8595 8.77679 13.6095C9.02684 13.3594 9.16732 13.0203 9.16732 12.6667V10H9.83398C9.9251 10 10.012 10.0173 10.0947 10.052C10.2532 10.1216 10.3797 10.2485 10.4487 10.4073C10.4831 10.4894 10.5008 10.5776 10.5007 10.6667L10.4847 12C10.4847 12.2707 10.5373 12.5327 10.642 12.7787C10.7427 13.018 10.8873 13.232 11.0693 13.4127C11.2544 13.5997 11.4749 13.748 11.7179 13.8488C11.9609 13.9496 12.2215 14.001 12.4847 14C12.7562 14 13.0158 13.9476 13.2633 13.8427C13.502 13.7427 13.7167 13.598 13.8973 13.4153C14.084 13.2301 14.2321 13.0095 14.3329 12.7666C14.4338 12.5236 14.4853 12.263 14.4847 12L14.5007 6C14.4998 5.66512 14.4149 5.3358 14.2537 5.04227C14.0925 4.74874 13.8601 4.50039 13.578 4.32ZM7.83398 5.33333H3.16732V3.33333H7.83398V5.33333ZM12.5007 6.66667C12.3238 6.66667 12.1543 6.59643 12.0292 6.4714C11.9042 6.34638 11.834 6.17681 11.834 6C11.834 5.82319 11.9042 5.65362 12.0292 5.5286C12.1543 5.40357 12.3238 5.33333 12.5007 5.33333C12.6775 5.33333 12.847 5.40357 12.9721 5.5286C13.0971 5.65362 13.1673 5.82319 13.1673 6C13.1673 6.17681 13.0971 6.34638 12.9721 6.4714C12.847 6.59643 12.6775 6.66667 12.5007 6.66667Z"
+                fill="#EFEFEF"
+              />
+            </svg>
+
+            <span>{trade?.routeSummary?.gasUsd ? '$' + (+trade.routeSummary.gasUsd).toPrecision(4) : '--'}</span>
+
+            <svg
+              className={'chevron'}
+              width="11"
+              height="6"
+              viewBox="0 0 11 6"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M1.5 1L5.5 5L9.5 1" stroke="#C0C0C0" stroke-linecap="square" stroke-linejoin="round" />
+              <path
+                d="M1.5 1L5.5 5L9.5 1"
+                stroke="black"
+                stroke-opacity="0.2"
+                stroke-linecap="square"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </ChevronBtn>
 
           {/*{!!rate && (
             <SettingBtn onClick={() => setInverseRate(prev => !prev)}>
@@ -654,7 +687,7 @@ const Widget = ({
         </MiddleLeft>
       }
       {showDetail && (
-        <Detail>
+        <Detail className={isOpen ? 'open' : 'close'}>
           {/*<Row>
             <DetailTitle>More information</DetailTitle>
             {enableRoute && !(isWrap || isUnwrap) && (

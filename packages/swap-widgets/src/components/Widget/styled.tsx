@@ -184,6 +184,45 @@ export const MiddleRow = styled.div`
 export const MiddleLeft = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+`
+
+export const ChevronBtn = styled.button`
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 1);
+  gap: 0.6rem;
+  transition: all 0.3s;
+  .pump {
+    width: 1.6rem;
+    height: 1.6rem;
+    transition: all 0.3s;
+  }
+  span, .chevron {
+    transition: all 0.3s;
+  }
+  &.open {
+    .pump,
+    span {
+      opacity: 0;
+    }
+    .chevron {  
+      transform: rotate(-180deg);
+    }
+  }
+  &.close {
+    .pump,
+    span {
+      opacity: 1;
+    }
+    .chevron {
+      transform: rotate(0);
+    }
+  }
 `
 
 export const CloseButton = styled.button`
@@ -301,7 +340,6 @@ export const Dots = styled.span`
 export const Rate = styled.div`
   font-size: 1.4rem;
   font-weight: 500;
-  margin-bottom: 1.5rem;
   color: rgba(192, 192, 192, 1);
 `
 
@@ -310,6 +348,13 @@ export const Detail = styled.div`
   flex-direction: column;
   gap: 12px;
   font-size: 12px;
+  transition: all 0.3s;
+  &.open {
+    opacity: 1;
+  }
+  &.close {
+    opacity: 0;
+  }
 `
 
 export const DetailRow = styled.div`
